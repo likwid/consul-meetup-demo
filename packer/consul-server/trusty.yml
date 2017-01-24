@@ -1,0 +1,56 @@
+---
+variables:
+  home: "{{env `HOME`}}"
+  access_key: "{{env `AWS_ACCESS_KEY`}}"
+  ami_name_pattern: "consul-server"
+  consul_disk_device: "/dev/xvdc"
+  consul_mountpoint: "/var/consul"
+  instance_type: "m4.large"
+  region: "{{env `AWS_REGION`}}"
+  secret_key: "{{env `AWS_SECRET_KEY`}}"
+  subnet_id: "{{env `SUBNET_ID`}}"
+  vpc_id: "{{env `VPC_ID`}}"
+
+builders:
+- type: "amazon-ebs"
+  associate_public_ip_address: true
+  access_key: "{{user `access_key`}}"
+  secret_key: "{{user `secret_key`}}"
+  region: "{{user `region`}}"
+  source_ami_filter: {
+    "filters": {
+      "virtualization-type": "hvm",
+      "name": "*basebox*",
+      "root-device-type": "ebs"
+    },
+    "owners": ["736656851179"],
+    "most_recent": true
+  }
+  instance_type: "{{user `instance_type`}}"
+  ssh_username: "ubuntu"
+  ami_name: "{{user `ami_name_pattern`}} {{timestamp}}"
+  vpc_id: "{{user `vpc_id`}}"
+  subnet_id: "{{user `subnet_id`}}"
+  run_tags: 
+    Type: "Packer"
+  tags: 
+    OSVersion: "Ubuntu 14.04"
+    DockerVersion: "1.12"
+    CreateDate: "{{isotime \"2006-01-02\"}}"
+    Type: consul-server
+  launch_block_device_mappings:
+  - device_name: "/dev/sda1"
+    volume_type: "gp2"
+    volume_size: 32
+    delete_on_termination: true
+  - device_name: "/dev/sdc"
+    volume_type: "gp2"
+    volume_size: 50
+    delete_on_termination: false
+
+provisioners:
+- type: ansible-local
+  playbook_file: ansible/playbooks/packer-consul-server/playbook.yml
+  playbook_dir: ansible
+  extra_arguments:
+  - "-u ubuntu -e 'consul_disk_device={{user `consul_disk_device`}} consul_mountpoint={{user `consul_mountpoint`}} region={{user `region`}} s3_bucket={{user `registry_bucket`}} internal_fqdn=awscoxautolabs34.int'"

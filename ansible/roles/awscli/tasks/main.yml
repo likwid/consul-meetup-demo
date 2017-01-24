@@ -1,0 +1,8 @@
+---
+- block:
+
+  - name: Install awscli
+    apt:
+      name: awscli
+
+  become: yes

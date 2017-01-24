@@ -1,0 +1,11 @@
+---
+- block:
+        
+  - name: Unzip terraform
+    unarchive:
+      src: https://releases.hashicorp.com/terraform/0.8.4/terraform_0.8.4_linux_amd64.zip
+      dest: /usr/local/bin/
+      copy: no   
+      mode: 777
+
+  become: yes    

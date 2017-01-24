@@ -1,0 +1,7 @@
+---
+- block:
+        
+  - name: Install yaml
+    command: npm install -g yaml-cli
+      
+  become: yes    
