@@ -2,12 +2,14 @@
 variables:
   home: "{{env `HOME`}}"
   access_key: "{{env `AWS_ACCESS_KEY`}}"
-  secret_key: "{{env `AWS_SECRET_KEY`}}"
-  region: "{{env `AWS_REGION`}}"
-  instance_type: "m4.large"
   ami_name_pattern: "basebox"
-  vpc_id: "{{env `PACKER_VPC_ID`}}"
+  consul_disk_device: "/dev/xvdc"
+  consul_mountpoint: "/var/consul"
+  instance_type: "m4.large"
+  region: "{{env `AWS_REGION`}}"
+  secret_key: "{{env `AWS_SECRET_KEY`}}"
   subnet_id: "{{env `PACKER_SUBNET_ID`}}"
+  vpc_id: "{{env `PACKER_VPC_ID`}}"
 
 builders:
 - type: "amazon-ebs"
@@ -59,4 +61,4 @@ provisioners:
   playbook_file: ansible/playbooks/packer-trusty-docker/playbook.yml
   playbook_dir: ansible
   extra_arguments:
-  - "-u ubuntu"
+  - "-u ubuntu -e 'consul_disk_device={{user `consul_disk_device`}} consul_mountpoint={{user `consul_mountpoint`}} region={{user `region`}}'"
