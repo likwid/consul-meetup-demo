@@ -6,8 +6,8 @@ variables:
   region: "{{env `AWS_REGION`}}"
   instance_type: "m4.large"
   ami_name_pattern: "basebox"
-  vpc_id: "{{env `VPC_ID`}}" 
-  subnet_id: "{{env `SUBNET_ID`}}"
+  vpc_id: "{{env `PACKER_VPC_ID`}}"
+  subnet_id: "{{env `PACKER_SUBNET_ID`}}"
 
 builders:
 - type: "amazon-ebs"
@@ -39,6 +39,10 @@ builders:
   - device_name: "/dev/sda1"
     volume_type: "gp2"
     volume_size: 32
+    delete_on_termination: true
+  - device_name: "/dev/sdc"
+    volume_type: "gp2"
+    volume_size: 50
     delete_on_termination: true
   - device_name: "/dev/sdl"
     volume_type: "gp2"

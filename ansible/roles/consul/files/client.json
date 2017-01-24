@@ -1,0 +1,17 @@
+{
+  "data_dir": "/var/consul",
+  "log_level": "INFO",
+  "addresses": {
+    "dns": "0.0.0.0",
+    "http": "0.0.0.0",
+    "rpc": "0.0.0.0",
+    "https": "0.0.0.0"
+  },
+  "performance": {
+    "raft_multiplier": 5
+  },
+  "retry_join_ec2": {
+    "tag_key": "Type",
+    "tag_value": "consul-server"
+  }
+}

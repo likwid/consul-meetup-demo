@@ -57,13 +57,13 @@
       group: consul
       state: directory
 
-  - name: Add Consul upstart file
-    template:
-      src: consul.conf.j2
+  - name: Copy consul upstart script
+    copy:
+      src: consul.conf
       dest: /etc/init/consul.conf
-      mode: 0644
       owner: root
       group: root
+      mode: 0644
 
   - name: Add Consul log file
     file:
@@ -79,6 +79,14 @@
       dest: /etc/logrotate.d/consul
       owner: root
       group: root
+
+  - name: Copy default consul configuration
+    copy:
+      src: client.json
+      dest: /etc/consul.d/client.json
+      mode: 0644
+      owner: consul
+      group: consul
 
   - name: Disable consul service
     service:

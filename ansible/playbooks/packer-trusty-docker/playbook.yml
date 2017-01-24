@@ -5,3 +5,4 @@
   - sysctl-settings
   - docker
   - aws-docker-disk
+  - consul

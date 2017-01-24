@@ -1,14 +1,6 @@
 ---
 - block:
 
-  - name: Copy consul upstart script
-    copy:
-      src: consul.conf
-      dest: /etc/init/consul.conf
-      owner: root
-      group: root
-      mode: 0644
-
   - name: Copy consul server configuration
     copy:
       src: server.json
@@ -16,6 +8,11 @@
       owner: consul
       group: consul
       mode: 0644
+
+  - name: Remove client configuration
+    file:
+      path: /etc/consul.d/client.json
+      state: absent
 
   - name: Enable consul service
     service:
